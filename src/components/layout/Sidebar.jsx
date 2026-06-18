@@ -18,8 +18,6 @@ const navItems = [
   { id: 'reports', label: 'Histori & Laporan', icon: Dataflow03 },
   { id: 'device', label: 'Device', icon: Server03 },
   { id: 'analytics', label: 'Analisis', icon: BarChart02 },
-  { id: 'config', label: 'Konfigurasi', icon: Settings01 },
-  { id: 'settings', label: 'Pengaturan ESP32', icon: Settings02 },
 ];
 
 const Sidebar = memo(({ activePage, setActivePage, onOpenSettings }) => {
