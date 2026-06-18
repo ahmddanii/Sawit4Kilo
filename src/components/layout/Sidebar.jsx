@@ -11,7 +11,6 @@ import {
   BarChart02,
 } from '@untitledui/icons';
 import AudioToggleSwitch from '../dashboard/AudioToggleSwitch';
-import MuteAllButton from '../dashboard/MuteAllButton';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart01 },
@@ -69,7 +68,6 @@ const Sidebar = memo(({ activePage, setActivePage, onOpenSettings }) => {
           </div>
           <div className="px-3 flex flex-col gap-1.5">
             <AudioToggleSwitch />
-            <MuteAllButton />
           </div>
         </div>
 
