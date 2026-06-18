@@ -6,8 +6,6 @@ const AudioSettings = () => {
   const {
     audioToggleState,
     setAudioToggleState,
-    buzzerActive,
-    setBuzzerActive,
   } = useContext(SensorContext);
 
   const [notification, setNotification] = useState(null);
@@ -36,7 +34,7 @@ const AudioSettings = () => {
       )}
 
       <div className="flex flex-col gap-6">
-        {/* Alarm pH */}
+        {/* Alarm Suara */}
         <div className="bg-[#F7F8FA] border border-[#EAECF0] rounded-[12px] p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -50,9 +48,9 @@ const AudioSettings = () => {
                 )}
               </div>
               <div>
-                <div className="text-[14px] font-bold text-[#202020]">Alarm pH</div>
+                <div className="text-[14px] font-bold text-[#202020]">Alarm Suara</div>
                 <div className="text-[12px] text-[#8C9BAF] mt-0.5">
-                  {audioToggleState ? 'Aktif — suara alarm akan berbunyi saat pH Bahaya' : 'Nonaktif — alarm pH dalam mode senyap'}
+                  {audioToggleState ? 'Aktif — suara alarm akan berbunyi saat status sistem Bahaya' : 'Nonaktif — alarm dalam mode senyap'}
                 </div>
               </div>
             </div>
@@ -73,47 +71,10 @@ const AudioSettings = () => {
           </div>
         </div>
 
-        {/* Buzzer */}
-        <div className="bg-[#F7F8FA] border border-[#EAECF0] rounded-[12px] p-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`w-[40px] h-[40px] rounded-[10px] flex items-center justify-center ${
-                buzzerActive ? 'bg-[#16A34A]/20' : 'bg-white border border-[#EAECF0]'
-              }`}>
-                {buzzerActive ? (
-                  <VolumeMax size={20} strokeWidth={2} className="text-[#16A34A]" />
-                ) : (
-                  <VolumeX size={20} strokeWidth={2} className="text-[#B9C8D7]" />
-                )}
-              </div>
-              <div>
-                <div className="text-[14px] font-bold text-[#202020]">Buzzer</div>
-                <div className="text-[12px] text-[#8C9BAF] mt-0.5">
-                  {buzzerActive ? 'Aktif — suara buzzer akan berbunyi saat Bahaya' : 'Nonaktif — buzzer dalam mode senyap'}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setBuzzerActive(!buzzerActive)}
-              className={`
-                w-[48px] h-[26px] rounded-[13px] relative shrink-0 transition-colors duration-200 outline-none cursor-pointer
-                ${buzzerActive ? 'bg-[#16A34A]' : 'bg-[#E5E7EB]'}
-              `}
-            >
-              <span
-                className={`
-                  absolute top-[3px] left-[3px] w-[20px] h-[20px] rounded-full bg-white shadow-sm transition-transform duration-200
-                  ${buzzerActive ? 'translate-x-[22px]' : 'translate-x-0'}
-                `}
-              />
-            </button>
-          </div>
-        </div>
-
         {/* Info */}
         <div className="bg-[#EFF6FF] border border-[#BFDBFE] rounded-[8px] p-4">
           <p className="text-[12px] text-[#1E40AF] leading-relaxed">
-            <strong className="font-semibold">Catatan:</strong> Alarm pH dan Buzzer menggunakan suara alarm yang sama. Keduanya aktif saat status sistem == BAHAYA.
+            <strong className="font-semibold">Catatan:</strong> Alarm akan berbunyi saat status sistem == BAHAYA.
           </p>
         </div>
       </div>

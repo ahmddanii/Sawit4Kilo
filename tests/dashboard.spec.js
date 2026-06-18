@@ -54,20 +54,20 @@ test.describe('TC-01: Navigasi Dasar Dashboard', () => {
 
   test('Navigasi ke halaman Histori & Laporan berfungsi', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Histori & Laporan');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Histori & Laporan', exact: true }).click();
     await expect(page.locator('#header-bar')).toContainText('Histori & Laporan');
     await expect(page).not.toHaveURL(/blank/);
   });
 
   test('Navigasi ke halaman Device berfungsi', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Device');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Device', exact: true }).click();
     await expect(page.locator('#header-bar')).toContainText('Device');
   });
 
   test('Navigasi ke halaman Analisis berfungsi', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Analisis');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Analisis', exact: true }).click();
     await expect(page.locator('#header-bar')).toContainText('Analisis');
   });
 
@@ -80,7 +80,7 @@ test.describe('TC-02: Layout Halaman Analisis', () => {
 
   test('Halaman analisis menampilkan semua modul grafik tanpa ruang kosong', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Analisis');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Analisis', exact: true }).click();
 
     // Heading yang ada di halaman berdasarkan struktur aktual komponen analytics
     await expect(page.locator('text=Tren & Korelasi pH vs TDS')).toBeVisible({ timeout: 8000 });
@@ -92,7 +92,7 @@ test.describe('TC-02: Layout Halaman Analisis', () => {
 
   test('Konten halaman analisis tidak crash (tidak blank putih)', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Analisis');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Analisis', exact: true }).click();
     await page.waitForTimeout(1000);
 
     // Halaman tidak boleh blank — sidebar harus tetap terlihat
@@ -112,7 +112,7 @@ test.describe('TC-03: Konfigurasi Batas Ambang (Threshold)', () => {
     await page.goto('/');
 
     // Navigasi ke Device > ThresholdGlobalPanel
-    await page.click('text=Device');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Device', exact: true }).click();
     await page.waitForSelector('text=Panel Threshold Global', { timeout: 8000 });
 
     // Ubah nilai pH minimum
@@ -132,7 +132,7 @@ test.describe('TC-03: Konfigurasi Batas Ambang (Threshold)', () => {
 
   test('Banner sukses "Konfigurasi Disimpan" muncul setelah menyimpan', async ({ page }) => {
     await page.goto('/');
-    await page.click('text=Device');
+    await page.locator('#sidebar-nav').getByRole('button', { name: 'Device', exact: true }).click();
     await page.waitForSelector('text=Panel Threshold Global', { timeout: 8000 });
 
     const phMinInput = page.locator('input[type="number"]').first();
@@ -256,7 +256,7 @@ test.describe('TC-05: Toggle Alarm Suara Terpadu', () => {
 
     const audioToggle = page.getByTestId('audio-toggle-btn');
     await expect(audioToggle).toBeVisible();
-    await expect(audioToggle).toContainText('Alarm Suara');
+    await expect(audioToggle).toContainText('Alarm Peringatan');
   });
 
   test('Toggle Alarm Suara menampilkan status "Aktif" saat dinyalakan', async ({ page }) => {
