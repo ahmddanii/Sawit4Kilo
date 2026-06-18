@@ -87,6 +87,74 @@ export const SensorProvider = ({ children }) => {
   const [allAlarmsMuted, setAllAlarmsMuted] = useState(false);
   const [buzzerActive, setBuzzerActive] = useState(false);
 
+  const [chartData, setChartData] = useState([]);
+  const [historyData, setHistoryData] = useState([]);
+  
+  const [nodes, setNodes] = useState([
+    {
+      id: 'KDC01',
+      name: 'KDC01',
+      location: 'Kolam Pengendap 1',
+      online: true,
+      ph: 3.2,
+      tds: 1200,
+      lastUpdate: new Date(),
+      chartData: generateInitialChartData(),
+    },
+    {
+      id: 'KDC02',
+      name: 'KDC02',
+      location: 'Kolam Pengendap 2',
+      online: false,
+      ph: 7.0,
+      tds: 240,
+      lastUpdate: new Date(Date.now() - 45000),
+      chartData: generateInitialChartData(),
+    },
+  ]);
+
+  const [selectedNode, setSelectedNode] = useState('KDC01');
+
+  // State Notifikasi Real-time
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'DANGER',
+      message: 'pH kritis terdeteksi di KDC01: pH 3.2 (Asam)',
+      time: '10m lalu',
+      unread: true,
+    },
+    {
+      id: 2,
+      type: 'OFFLINE',
+      message: 'Node KDC02 terputus (Offline)',
+      time: '30m lalu',
+      unread: true,
+    },
+    {
+      id: 3,
+      type: 'SUCCESS',
+      message: 'Node KDC01 kembali dalam kondisi Aman',
+      time: '1j lalu',
+      unread: false,
+    }
+  ]);
+
+  const addNotification = useCallback((type, message) => {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    setNotifications((prev) => [
+      {
+        id: Date.now(),
+        type,
+        message,
+        time: timeStr,
+        unread: true,
+      },
+      ...prev.slice(0, 19),
+    ]);
+  }, []);
+
   const [notificationSettings, setNotificationSettings] = useState(() => {
     const saved = localStorage.getItem('KIDECO_NOTIFICATION_SETTINGS');
     const defaultSettings = {
@@ -134,35 +202,45 @@ export const SensorProvider = ({ children }) => {
     }
   }, [systemStatus]);
 
+  // Track systemStatus transitions for real-time notifications
+  const prevStatusRef = useRef(systemStatus);
+  useEffect(() => {
+    if (systemStatus !== prevStatusRef.current) {
+      if (systemStatus === 'BAHAYA') {
+        const isPhDanger = currentPh < phThresholdMin || currentPh > phThresholdMax;
+        const isTdsDanger = currentTds > tdsThreshold;
+        let msg = '';
+        if (isPhDanger && isTdsDanger) msg = `Kondisi Kritis: pH (${currentPh}) & TDS (${currentTds} ppm) melanggar batas.`;
+        else if (isPhDanger) msg = `pH Kritis terdeteksi: ${currentPh}.`;
+        else msg = `TDS Kritis terdeteksi: ${currentTds} ppm.`;
+        addNotification('DANGER', msg);
+      } else {
+        addNotification('SUCCESS', 'Kondisi air kembali normal dan Aman.');
+      }
+      prevStatusRef.current = systemStatus;
+    }
+  }, [systemStatus, currentPh, currentTds, phThresholdMin, phThresholdMax, tdsThreshold, addNotification]);
+
+  // Track nodes online/offline status changes for real-time notifications
+  const prevNodesOnlineRef = useRef({
+    KDC01: true,
+    KDC02: false,
+  });
+  useEffect(() => {
+    nodes.forEach((node) => {
+      const prevOnline = prevNodesOnlineRef.current[node.id];
+      if (prevOnline !== undefined && prevOnline !== node.online) {
+        if (!node.online) {
+          addNotification('OFFLINE', `Node ${node.id} terputus (Offline)`);
+        } else {
+          addNotification('SUCCESS', `Node ${node.id} kembali terhubung (Online)`);
+        }
+      }
+      prevNodesOnlineRef.current[node.id] = node.online;
+    });
+  }, [nodes, addNotification]);
+
   const audioContextRef = useRef(null);
-
-  const [chartData, setChartData] = useState([]);
-  const [historyData, setHistoryData] = useState([]);
-  
-  const [nodes, setNodes] = useState([
-    {
-      id: 'KDC01',
-      name: 'KDC01',
-      location: 'Kolam Pengendap 1',
-      online: true,
-      ph: 3.2,
-      tds: 1200,
-      lastUpdate: new Date(),
-      chartData: generateInitialChartData(),
-    },
-    {
-      id: 'KDC02',
-      name: 'KDC02',
-      location: 'Kolam Pengendap 2',
-      online: false,
-      ph: 7.0,
-      tds: 240,
-      lastUpdate: new Date(Date.now() - 45000),
-      chartData: generateInitialChartData(),
-    },
-  ]);
-
-  const [selectedNode, setSelectedNode] = useState('KDC01');
 
   // Fetch initial history data from backend
   const fetchHistory = useCallback(async () => {
@@ -574,6 +652,10 @@ export const SensorProvider = ({ children }) => {
         
         notificationSettings,
         updateNotificationSettings,
+
+        notifications,
+        setNotifications,
+        addNotification,
       }}
     >
       {children}
