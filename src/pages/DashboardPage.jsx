@@ -21,6 +21,7 @@ const DashboardPage = ({ setActivePage }) => {
     lastTimestamp,
     historyData,
     phThresholdMin,
+    phThresholdMax,
     tdsThreshold,
   } = useContext(SensorContext);
 
@@ -31,8 +32,8 @@ const DashboardPage = ({ setActivePage }) => {
 
   const phVal = parseFloat(currentPh) || 0;
   let phBadgeType = 'safe';
-  if (phVal < 6.5) phBadgeType = 'danger';
-  else if (phVal > 8.5) phBadgeType = 'warning';
+  if (phVal < phThresholdMin) phBadgeType = 'danger';
+  else if (phVal > phThresholdMax) phBadgeType = 'warning';
 
   const phBarCurrent = Math.round((phVal / 14) * 100);
   const phBarColor =
@@ -40,17 +41,17 @@ const DashboardPage = ({ setActivePage }) => {
     phBadgeType === 'warning' ? 'bg-[#F59E0B]' : 'bg-[#22C55E]';
   const phDelta =
     phBadgeType === 'danger'
-      ? `${(6.5 - phVal).toFixed(1)} di bawah normal`
+      ? `${(phThresholdMin - phVal).toFixed(2)} di bawah normal`
       : phBadgeType === 'warning'
-      ? `${(phVal - 8.5).toFixed(1)} di atas normal`
+      ? `${(phVal - phThresholdMax).toFixed(2)} di atas normal`
       : 'Dalam rentang normal';
 
   const tdsVal = parseFloat(currentTds) || 0;
   const tdsBarCurrent = Math.min(100, Math.round((tdsVal / 1500) * 100));
-  const tdsBarColor = isTdsAlert ? 'bg-[#F59E0B]' : 'bg-[#22C55E]';
+  const tdsBarColor = isTdsAlert ? 'bg-[#FF4628]' : 'bg-[#22C55E]';
   const tdsDelta = isTdsAlert
-    ? `+${(tdsVal - 500).toFixed(0)} ppm dari batas`
-    : `${(500 - tdsVal).toFixed(0)} ppm di bawah batas`;
+    ? `+${(tdsVal - tdsThreshold).toFixed(0)} ppm dari batas`
+    : `${(tdsThreshold - tdsVal).toFixed(0)} ppm di bawah batas`;
 
   const sensorData = {
     ph: currentPh,

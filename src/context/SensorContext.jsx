@@ -34,11 +34,41 @@ const formatTimestamp = (date) => {
   return `${y}-${m}-${d} ${h}:${min}:${s}`;
 };
 
+const parseESP32Timestamp = (timestamp, createdAt) => {
+  if (timestamp) {
+    if (typeof timestamp === 'string' && timestamp.endsWith('Z')) {
+      return new Date(timestamp.replace(/Z$/, '+08:00'));
+    }
+    return new Date(timestamp);
+  }
+  return createdAt ? new Date(createdAt) : new Date();
+};
+
 const getNodeStatus = (node, phThresholdMin, phThresholdMax, tdsThreshold) => {
   if (!node.online) return 'OFFLINE';
   const isPhDanger = node.ph < phThresholdMin || node.ph > phThresholdMax;
   const isTdsDanger = node.tds > tdsThreshold;
   return (isPhDanger || isTdsDanger) ? 'BAHAYA' : 'AMAN';
+};
+
+const isInQuietHours = (settings) => {
+  if (!settings || !settings.quietHoursEnabled) return false;
+  const now = new Date();
+  const nowH = now.getHours();
+  const nowM = now.getMinutes();
+
+  const [startH, startM] = (settings.quietStart || '22:00').split(':').map(Number);
+  const [endH, endM] = (settings.quietEnd || '06:00').split(':').map(Number);
+
+  const nowMinutes = nowH * 60 + nowM;
+  const startMinutes = startH * 60 + startM;
+  const endMinutes = endH * 60 + endM;
+
+  if (startMinutes <= endMinutes) {
+    return nowMinutes >= startMinutes && nowMinutes <= endMinutes;
+  } else {
+    return nowMinutes >= startMinutes || nowMinutes <= endMinutes;
+  }
 };
 
 export const SensorProvider = ({ children }) => {
@@ -49,9 +79,31 @@ export const SensorProvider = ({ children }) => {
   });
   
   const [activeSensor, setActiveSensor] = useState('ALL');
-  const [audioToggleState, setAudioToggleState] = useState(false);
+  const [audioToggleState, setAudioToggleState] = useState(() => {
+    const saved = localStorage.getItem('KIDECO_AUDIO_ALARM');
+    return saved === 'true';
+  });
+  const [showDangerToast, setShowDangerToast] = useState(false);
   const [allAlarmsMuted, setAllAlarmsMuted] = useState(false);
   const [buzzerActive, setBuzzerActive] = useState(false);
+
+  const [notificationSettings, setNotificationSettings] = useState(() => {
+    const saved = localStorage.getItem('KIDECO_NOTIFICATION_SETTINGS');
+    const defaultSettings = {
+      soundEnabled: true,
+      visualEnabled: true,
+      quietHoursEnabled: false,
+      quietStart: '22:00',
+      quietEnd: '06:00',
+      frequency: 'realtime',
+    };
+    return saved ? JSON.parse(saved) : defaultSettings;
+  });
+
+  const updateNotificationSettings = useCallback((newSettings) => {
+    setNotificationSettings(newSettings);
+    localStorage.setItem('KIDECO_NOTIFICATION_SETTINGS', JSON.stringify(newSettings));
+  }, []);
 
   const [phThresholdMin, setPhThresholdMin] = useState(() => {
     const saved = localStorage.getItem('KIDECO_PH_MIN');
@@ -73,6 +125,14 @@ export const SensorProvider = ({ children }) => {
   const isPhAlert = currentPh < phThresholdMin || currentPh > phThresholdMax;
   const isTdsAlert = currentTds > tdsThreshold;
   const systemStatus = (isPhAlert || isTdsAlert) ? 'BAHAYA' : 'AMAN';
+
+  useEffect(() => {
+    if (systemStatus === 'BAHAYA') {
+      setShowDangerToast(true);
+    } else {
+      setShowDangerToast(false);
+    }
+  }, [systemStatus]);
 
   const audioContextRef = useRef(null);
 
@@ -112,7 +172,7 @@ export const SensorProvider = ({ children }) => {
       if (result.success && result.data && result.data.length > 0) {
         // Map backend data format to frontend row format
         const mappedHistory = result.data.map((item, index) => {
-          const itemDate = new Date(item.timestamp || item.createdAt);
+          const itemDate = parseESP32Timestamp(item.timestamp, item.createdAt);
           const isPhDanger = item.ph < phThresholdMin || item.ph > phThresholdMax;
           const isTdsDanger = item.tds > 800;
           return {
@@ -189,7 +249,7 @@ export const SensorProvider = ({ children }) => {
 
   // Handler update sensor dari WebSocket atau Fallback
   const handleNewSensorData = useCallback((data) => {
-    const itemDate = new Date(data.timestamp || data.createdAt);
+    const itemDate = parseESP32Timestamp(data.timestamp, data.createdAt);
     const timeStr = formatTime(itemDate);
 
     setCurrentPh(data.ph);
@@ -240,7 +300,7 @@ export const SensorProvider = ({ children }) => {
       const result = await response.json();
       if (result.success && result.data) {
         const item = result.data;
-        const itemDate = new Date(item.timestamp);
+        const itemDate = parseESP32Timestamp(item.timestamp);
         const timeStr = formatTime(itemDate);
 
         setCurrentPh(item.ph);
@@ -426,7 +486,12 @@ export const SensorProvider = ({ children }) => {
 
   // Play alarm beep ketika bahaya terdeteksi
   useEffect(() => {
-    if (audioToggleState && systemStatus === 'BAHAYA') {
+    const quiet = isInQuietHours(notificationSettings);
+    const soundOn = notificationSettings ? notificationSettings.soundEnabled : true;
+
+    const shouldBeep = audioToggleState && systemStatus === 'BAHAYA';
+
+    if (shouldBeep && soundOn && !quiet) {
       try {
         if (!audioContextRef.current) {
           audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
@@ -445,7 +510,7 @@ export const SensorProvider = ({ children }) => {
         // Audio API not supported
       }
     }
-  }, [audioToggleState, systemStatus, currentPh, currentTds]);
+  }, [audioToggleState, systemStatus, notificationSettings]);
 
   const updateThresholds = useCallback(({ phMin, phMax, tdsMax }) => {
     setPhThresholdMin(phMin);
@@ -459,7 +524,11 @@ export const SensorProvider = ({ children }) => {
   }, []);
 
   const toggleAudioAlarm = useCallback(() => {
-    setAudioToggleState((prev) => !prev);
+    setAudioToggleState((prev) => {
+      const next = !prev;
+      localStorage.setItem('KIDECO_AUDIO_ALARM', String(next));
+      return next;
+    });
   }, []);
 
   return (
@@ -470,6 +539,8 @@ export const SensorProvider = ({ children }) => {
         setActiveSensor,
         audioToggleState,
         setAudioToggleState,
+        showDangerToast,
+        setShowDangerToast,
         allAlarmsMuted,
         setAllAlarmsMuted,
         buzzerActive,
@@ -481,25 +552,28 @@ export const SensorProvider = ({ children }) => {
         systemStatus,
         isPhAlert,
         isTdsAlert,
-
+ 
         phThresholdMin,
         phThresholdMax,
         tdsThreshold,
         setTdsThreshold,
         updateThresholds,
-
+ 
         toggleAudioAlarm,
-
+ 
         chartData,
-
+ 
         historyData,
-
+ 
         selectedNode,
         setSelectedNode,
-
+ 
         nodes,
         setNodes,
         getNodeStatus: (node) => getNodeStatus(node, phThresholdMin, phThresholdMax, tdsThreshold),
+        
+        notificationSettings,
+        updateNotificationSettings,
       }}
     >
       {children}

@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { SensorContext } from '../../context/SensorContext';
 import { CheckCircle, Bell01, BellOff01 } from '@untitledui/icons';
 
-const STORAGE_KEY = 'KIDECO_NOTIFICATION_SETTINGS';
-
-const defaultSettings = {
-  soundEnabled: true,
-  visualEnabled: true,
-  quietHoursEnabled: false,
-  quietStart: '22:00',
-  quietEnd: '06:00',
-  frequency: 'realtime',
-};
-
 const NotificationSettings = () => {
-  const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : defaultSettings;
-  });
+  const { notificationSettings, updateNotificationSettings } = useContext(SensorContext);
+  const [settings, setSettings] = useState(notificationSettings);
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    setSettings(notificationSettings);
+  }, [notificationSettings]);
 
   useEffect(() => {
     if (notification) {
@@ -34,7 +26,7 @@ const NotificationSettings = () => {
   const handleSave = async () => {
     setSaving(true);
     await new Promise((r) => setTimeout(r, 600));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    updateNotificationSettings(settings);
     setSaving(false);
     setNotification({ type: 'success', message: 'Pengaturan notifikasi disimpan' });
   };

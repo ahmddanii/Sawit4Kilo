@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import { Bell01, AlertTriangle, CheckCircle } from '@untitledui/icons';
+import { SensorContext } from '../../context/SensorContext';
 
 const Header = memo(({
   selectedNode,
@@ -11,6 +12,7 @@ const Header = memo(({
   showNodeSelector = false,
   showStatusBadge = true,
 }) => {
+  const { showDangerToast, setShowDangerToast } = useContext(SensorContext);
   const isDanger = systemStatus === 'BAHAYA';
   const isGreetingMode = !title;
 
@@ -36,21 +38,21 @@ const Header = memo(({
 
       <div className="flex items-center gap-3">
         {showStatusBadge && systemStatus && (
-          <div
-            className={`
-              flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold
-              ${isDanger
-                ? 'bg-[#FF4628]/10 border-[#FF4628]/20 text-[#FF4628]'
-                : 'bg-[#16A34A]/10 border-[#16A34A]/20 text-[#16A34A]'}
-            `}
-          >
-            {isDanger ? (
+          isDanger ? (
+            <button
+              onClick={() => setShowDangerToast((prev) => !prev)}
+              title="Klik untuk tampilkan/sembunyikan detail peringatan"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#FF4628]/20 bg-[#FF4628]/10 text-[#FF4628] text-[11px] font-bold cursor-pointer hover:bg-[#FF4628]/20 transition-all select-none active:scale-95 outline-none shadow-3xs"
+            >
               <AlertTriangle size={12} strokeWidth={2} />
-            ) : (
+              Bahaya
+            </button>
+          ) : (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#16A34A]/20 bg-[#16A34A]/10 text-[#16A34A] text-[11px] font-bold">
               <CheckCircle size={12} strokeWidth={2} />
-            )}
-            {isDanger ? 'Bahaya' : 'Aman'}
-          </div>
+              Aman
+            </div>
+          )
         )}
 
         {showNodeSelector && (

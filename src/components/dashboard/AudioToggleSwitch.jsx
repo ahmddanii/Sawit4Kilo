@@ -3,7 +3,7 @@ import { SensorContext } from '../../context/SensorContext';
 import { VolumeMax, VolumeX, Loading01 } from '@untitledui/icons';
 
 const AudioToggleSwitch = () => {
-  const { audioToggleState, setAudioToggleState, systemStatus } = useContext(SensorContext);
+  const { audioToggleState, toggleAudioAlarm, systemStatus } = useContext(SensorContext);
   const [isMutating, setIsMutating] = useState(false);
   const audioRef = useRef(null);
 
@@ -32,9 +32,9 @@ const AudioToggleSwitch = () => {
     if (isMutating) return;
     setIsMutating(true);
     setTimeout(() => {
-      setAudioToggleState((prev) => !prev);
+      toggleAudioAlarm();
       setIsMutating(false);
-    }, 800);
+    }, 600);
   };
 
   const isOn = audioToggleState;
@@ -67,7 +67,7 @@ const AudioToggleSwitch = () => {
           )}
         </div>
         <div className="text-left">
-          <div className="text-[12px] font-semibold text-[#202020] leading-tight">Alarm pH</div>
+          <div className="text-[12px] font-semibold text-[#202020] leading-tight">Alarm Suara</div>
           <div className="text-[10px] text-[#B9C8D7] leading-tight mt-0.5">
             {isOn ? 'Aktif' : 'Mati'}
           </div>

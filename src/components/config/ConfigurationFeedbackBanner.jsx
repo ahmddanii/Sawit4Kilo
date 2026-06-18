@@ -15,6 +15,7 @@ const ConfigurationFeedbackBanner = ({ isVisible, onClose }) => {
   return (
     <Transition
       show={isVisible}
+      as="div"
       enter="transition-all duration-300 ease-out"
       enterFrom="opacity-0 translate-y-2 sm:translate-y-0 sm:translate-x-4"
       enterTo="opacity-100 translate-y-0 sm:translate-x-0"
