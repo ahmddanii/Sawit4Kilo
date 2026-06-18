@@ -1,5 +1,5 @@
-import React, { memo, useContext } from 'react';
-import { Bell01, AlertTriangle, CheckCircle } from '@untitledui/icons';
+import React, { memo, useContext, useState, useEffect, useRef } from 'react';
+import { Bell01, AlertTriangle, CheckCircle, AlertCircle } from '@untitledui/icons';
 import { SensorContext } from '../../context/SensorContext';
 
 const Header = memo(({
@@ -12,14 +12,38 @@ const Header = memo(({
   showNodeSelector = false,
   showStatusBadge = true,
 }) => {
-  const { showDangerToast, setShowDangerToast } = useContext(SensorContext);
+  const { showDangerToast, setShowDangerToast, notifications, setNotifications } = useContext(SensorContext);
   const isDanger = systemStatus === 'BAHAYA';
   const isGreetingMode = !title;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const unreadCount = notifications ? notifications.filter((n) => n.unread).length : 0;
+
+  const handleMarkAllRead = () => {
+    if (setNotifications) {
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, unread: false }))
+      );
+    }
+  };
 
   return (
     <header
       id="header-bar"
-      className="bg-white border-b border-[#B9C8D7]/30 flex items-center justify-between px-6 py-4 shrink-0"
+      className="bg-white border-b border-[#B9C8D7]/30 flex items-center justify-between px-6 py-4 shrink-0 relative"
     >
       <div className="flex items-center gap-4">
         {isGreetingMode ? (
@@ -68,12 +92,85 @@ const Header = memo(({
           </select>
         )}
 
-        <button className="relative w-[32px] h-[32px] rounded-[8px] bg-white border border-[#EAECF0] flex items-center justify-center cursor-pointer text-[#B9C8D7] transition-colors hover:bg-[#F7F8FA]">
-          <Bell01 size={16} strokeWidth={1.5} />
-          {isDanger && (
-            <span className="absolute top-1.5 right-1.5 w-[5px] h-[5px] bg-[#FF4628] rounded-full" />
+        {/* Notification Bell with Dropdown Wrapper */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="relative w-[32px] h-[32px] rounded-[8px] bg-white border border-[#EAECF0] flex items-center justify-center cursor-pointer text-[#B9C8D7] transition-colors hover:bg-[#F7F8FA] outline-none"
+            title="Notifikasi"
+          >
+            <Bell01 size={16} strokeWidth={1.5} />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-1 rounded-full bg-[#FF4628] text-white text-[8px] font-bold flex items-center justify-center border border-white shadow-sm">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+
+          {isOpen && (
+            <div className="absolute right-0 top-[40px] w-[300px] bg-white border border-[#EAECF0] rounded-[12px] shadow-lg z-50 overflow-hidden">
+              {/* Dropdown Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#EAECF0]">
+                <span className="text-[12px] font-bold text-[#202020]">Notifikasi Terbaru</span>
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllRead}
+                    className="text-[10px] font-bold text-[#FF4628] hover:text-[#FF4628]/80 cursor-pointer transition-colors"
+                  >
+                    Tandai dibaca
+                  </button>
+                )}
+              </div>
+
+              {/* Dropdown Body / Notification List */}
+              <div className="max-h-[260px] overflow-y-auto divide-y divide-[#F2F4F7]">
+                {notifications && notifications.map((notif) => {
+                  const isUnread = notif.unread;
+                  let IconComponent = CheckCircle;
+                  let iconBgClass = 'text-[#16A34A] bg-[#16A34A]/10';
+                  
+                  if (notif.type === 'DANGER') {
+                    IconComponent = AlertTriangle;
+                    iconBgClass = 'text-[#FF4628] bg-[#FF4628]/10';
+                  } else if (notif.type === 'OFFLINE') {
+                    IconComponent = AlertCircle;
+                    iconBgClass = 'text-[#D97706] bg-[#D97706]/10';
+                  }
+
+                  return (
+                    <div
+                      key={notif.id}
+                      className={`flex items-start gap-3 p-3 transition-colors ${
+                        isUnread ? 'bg-[#FF4628]/5' : 'hover:bg-[#F9FAFB]'
+                      }`}
+                    >
+                      <div className={`w-[26px] h-[26px] rounded-full flex items-center justify-center shrink-0 ${iconBgClass}`}>
+                        <IconComponent size={13} strokeWidth={2.5} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-[12px] leading-snug ${isUnread ? 'font-bold text-[#202020]' : 'font-medium text-[#475467]'}`}>
+                          {notif.message}
+                        </p>
+                        <span className="text-[10px] text-[#B9C8D7] mt-1 block">
+                          {notif.time}
+                        </span>
+                      </div>
+                      {isUnread && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF4628] mt-1.5 shrink-0" />
+                      )}
+                    </div>
+                  );
+                })}
+
+                {(!notifications || notifications.length === 0) && (
+                  <div className="py-8 text-center text-[12px] text-[#B9C8D7]">
+                    Tidak ada notifikasi baru
+                  </div>
+                )}
+              </div>
+            </div>
           )}
-        </button>
+        </div>
       </div>
     </header>
   );
