@@ -22,7 +22,7 @@ Sistem dashboard berbasis **IoT + AI** untuk mendeteksi, memprediksi, dan member
 ---
 
 ## Daftar Isi
-
+- [Live Preview Project](#-live-preview-project)
 - [Latar Belakang](#-latar-belakang)
 - [Fitur Utama](#-fitur-utama)
 - [Arsitektur Sistem](#-arsitektur-sistem)
@@ -35,6 +35,16 @@ Sistem dashboard berbasis **IoT + AI** untuk mendeteksi, memprediksi, dan member
 - [Pengujian](#-pengujian)
 - [NPM Scripts](#-npm-scripts)
 - [Kontribusi](#-kontribusi)
+
+---
+
+## 💻 Live Preview Project
+
+🔗 **Live Demo:** [sawit4-kilo.vercel.app](https://sawit4-kilo.vercel.app/)
+
+<p align="center">
+  <img width="250" alt="QR Code" src="https://github.com/user-attachments/assets/5a2a1681-7ada-4ab8-9284-07b9230fd1b8" />
+</p>
 
 ---
 
