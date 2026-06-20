@@ -1032,6 +1032,6 @@ Proyek ini dikembangkan untuk keperluan lomba/akademik. Silakan hubungi tim peng
 
 **SIMPATI-AAT** — Monitoring Air Asam Tambang yang Cerdas dan Terpadu
 
-Dibangun dengan ❤️ oleh Tim Pengembang SIMPATI-AAT
+Dibangun dengan Tim Sawit4Kilo
 
 </div>
