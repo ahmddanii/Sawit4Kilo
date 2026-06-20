@@ -3,7 +3,7 @@ import StatusBadge from './StatusBadge';
 
 const LogDataTable = ({ data }) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto w-full">
       <table className="w-full text-left border-collapse" style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr className="bg-[#F7F8FA] border-b border-[#EAECF0]">

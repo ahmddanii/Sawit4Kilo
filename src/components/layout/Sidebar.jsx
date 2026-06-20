@@ -72,7 +72,66 @@ const Sidebar = memo(({ activePage, setActivePage, onOpenSettings, isOpen = fals
             </button>
           </div>
 
-          {/* ── 2. Navigation ── */}
+          {/* ── 2. Profile Dropdown (Moved to Top) ── */}
+          <div className="border-b border-[#B9C8D7]/30 pb-4 mb-4 px-2">
+            <Menu as="div" className="relative">
+              <Menu.Button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[12px] bg-white border border-[#B9C8D7]/30 shadow-sm transition-colors hover:bg-slate-50 cursor-pointer outline-none">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex"
+                  alt="Alex Johnson"
+                  className="w-[34px] h-[34px] rounded-full bg-[#B9C8D7]/20 shrink-0"
+                />
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="text-[11px] font-normal text-[#B9C8D7] truncate leading-tight">Admin</div>
+                  <div className="text-[13px] font-bold text-[#202020] truncate leading-tight">
+                    Alex Johnson
+                  </div>
+                </div>
+                <ChevronDown size={14} className="text-[#B9C8D7] shrink-0" />
+              </Menu.Button>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute left-full ml-2 top-0 w-[160px] rounded-[10px] bg-white border border-[#B9C8D7]/30 shadow-sm outline-none overflow-hidden z-50">
+                  <div className="p-1">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={() => onOpenSettings()}
+                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-[8px] text-[13px] font-bold transition-colors duration-150 ${
+                            active ? 'bg-[#F5F5F5] text-[#202020]' : 'text-[#202020]'
+                          }`}
+                        >
+                          <Settings01 size={16} strokeWidth={2} />
+                          Pengaturan
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-[8px] text-[13px] font-bold transition-colors duration-150 ${
+                            active ? 'bg-[#FF4628]/10 text-[#FF4628]' : 'text-[#FF4628]'
+                          }`}
+                        >
+                          <LogOut01 size={16} strokeWidth={2} />
+                          Logout
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          </div>
+
+          {/* ── 3. Navigation ── */}
           <div className="flex flex-col flex-1 px-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -109,64 +168,7 @@ const Sidebar = memo(({ activePage, setActivePage, onOpenSettings, isOpen = fals
             </div>
           </div>
 
-          {/* ── 4. Bottom: Profile Dropdown ── */}
-          <div className="border-t border-[#B9C8D7]/30 pt-4 px-2">
-            <Menu as="div" className="relative">
-              <Menu.Button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[12px] bg-white border border-[#B9C8D7]/30 shadow-sm transition-colors hover:bg-slate-50 cursor-pointer outline-none">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex"
-                  alt="Alex Johnson"
-                  className="w-[34px] h-[34px] rounded-full bg-[#B9C8D7]/20 shrink-0"
-                />
-                <div className="flex-1 min-w-0 text-left">
-                  <div className="text-[11px] font-normal text-[#B9C8D7] truncate leading-tight">Admin</div>
-                  <div className="text-[13px] font-bold text-[#202020] truncate leading-tight">
-                    Alex Johnson
-                  </div>
-                </div>
-                <ChevronDown size={14} className="text-[#B9C8D7] shrink-0" />
-              </Menu.Button>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute left-full ml-2 bottom-0 w-[160px] rounded-[10px] bg-white border border-[#B9C8D7]/30 shadow-sm outline-none overflow-hidden z-50">
-                  <div className="p-1">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={() => onOpenSettings()}
-                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-[8px] text-[13px] font-bold transition-colors duration-150 ${
-                            active ? 'bg-[#F5F5F5] text-[#202020]' : 'text-[#202020]'
-                          }`}
-                        >
-                          <Settings01 size={16} strokeWidth={2} />
-                          Pengaturan
-                        </button>
-                      )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          className={`w-full flex items-center gap-3 px-3 py-2 rounded-[8px] text-[13px] font-bold transition-colors duration-150 ${
-                            active ? 'bg-[#FF4628]/10 text-[#FF4628]' : 'text-[#FF4628]'
-                          }`}
-                        >
-                          <LogOut01 size={16} strokeWidth={2} />
-                          Logout
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </div>
-                </Menu.Items>
-              </Transition>
-            </Menu>
-          </div>
+
 
         </div>
       </aside>

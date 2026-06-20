@@ -31,22 +31,22 @@ const FilterToolbar = ({
           type="datetime-local"
           value={dateFrom}
           onChange={(e) => onDateFromChange(e.target.value)}
-          className="h-[38px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[13px] font-medium text-[#202020] outline-none transition-all focus:border-[#FF4628] max-w-[210px] w-full"
+          className="h-[38px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[13px] font-medium text-[#202020] outline-none transition-all focus:border-[#FF4628] w-full sm:max-w-[210px]"
           title="Dari Tanggal & Jam"
         />
 
-        <span className="text-[#B9C8D7] text-[13px]">—</span>
+        <span className="text-[#B9C8D7] text-[13px] hidden sm:inline">—</span>
 
         <input
           id="filter-date-to"
           type="datetime-local"
           value={dateTo}
           onChange={(e) => onDateToChange(e.target.value)}
-          className="h-[38px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[13px] font-medium text-[#202020] outline-none transition-all focus:border-[#FF4628] max-w-[210px] w-full"
+          className="h-[38px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[13px] font-medium text-[#202020] outline-none transition-all focus:border-[#FF4628] w-full sm:max-w-[210px]"
           title="Hingga Tanggal & Jam"
         />
 
-        <div className="w-[130px]">
+        <div className="w-full sm:w-[130px]">
           <select
             id="filter-node-id"
             value={nodeFilter}
@@ -60,7 +60,7 @@ const FilterToolbar = ({
           </select>
         </div>
 
-        <div className="w-[160px]">
+        <div className="w-full sm:w-[160px]">
           <AcidityFilterDropdown value={acidityFilter} onChange={onAcidityChange} />
         </div>
 
@@ -69,13 +69,13 @@ const FilterToolbar = ({
           color="primary"
           iconLeading={<SearchMd />}
           onClick={onApplyFilter}
-          className="h-[38px]"
+          className="h-[38px] w-full sm:w-auto"
         >
           Cari
         </Button>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
         <ExportButton
           color="secondary"
           label="Unduh CSV"

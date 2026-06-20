@@ -35,7 +35,7 @@ const StatsModule = ({ stats, insight, loading, onRefreshInsight }) => {
           <span className="w-1.5 h-3.5 rounded-full bg-[#FF4628]" />
           <span className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">pH Parameter</span>
         </div>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
           <StatCard label="Rata-rata" value={stats.ph.mean.toFixed(2)} color="#101828" />
           <StatCard label="Min" value={stats.ph.min.toFixed(1)} color="#15803D" bg="bg-[#F0FDF4]" />
           <StatCard label="Max" value={stats.ph.max.toFixed(1)} color="#D92D20" bg="bg-[#FFF5F5]" />
@@ -50,7 +50,7 @@ const StatsModule = ({ stats, insight, loading, onRefreshInsight }) => {
           <span className="w-1.5 h-3.5 rounded-full bg-[#3B82F6]" />
           <span className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">TDS Parameter</span>
         </div>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <StatCard label="Rata-rata" value={Math.round(stats.tds.mean)} unit="ppm" color="#101828" />
           <StatCard label="Min" value={Math.round(stats.tds.min)} unit="ppm" color="#15803D" bg="bg-[#F0FDF4]" />
           <StatCard label="Max" value={Math.round(stats.tds.max)} unit="ppm" color="#D92D20" bg="bg-[#FFF5F5]" />

@@ -220,13 +220,13 @@ Buat ringkasan 3-5 kalimat dalam Bahasa Indonesia yang menjelaskan kondisi kesel
               </div>
             </div>
             
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 w-full xl:w-auto">
+              <div className="flex flex-col gap-1.5 w-full sm:w-auto">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-[#667085]">Rentang Waktu</label>
                 <select
                   value={period}
                   onChange={(e) => setPeriod(e.target.value)}
-                  className="h-[36px] min-w-[130px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[12px] font-bold text-[#344054] shadow-3xs cursor-pointer outline-none focus:border-[#FF4628] hover:bg-[#F9FAFB] transition-all"
+                  className="h-[36px] w-full sm:min-w-[130px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[12px] font-bold text-[#344054] shadow-3xs cursor-pointer outline-none focus:border-[#FF4628] hover:bg-[#F9FAFB] transition-all"
                 >
                   <option value="24h">24 Jam Terakhir</option>
                   <option value="7d">7 Hari Terakhir</option>
@@ -234,12 +234,12 @@ Buat ringkasan 3-5 kalimat dalam Bahasa Indonesia yang menjelaskan kondisi kesel
                 </select>
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 w-full sm:w-auto">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-[#667085]">Node Pemantauan</label>
                 <select
                   value={selectedNode}
                   onChange={(e) => setSelectedNode(e.target.value)}
-                  className="h-[36px] min-w-[150px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[12px] font-bold text-[#344054] shadow-3xs cursor-pointer outline-none focus:border-[#FF4628] hover:bg-[#F9FAFB] transition-all"
+                  className="h-[36px] w-full sm:min-w-[150px] px-3 bg-white border border-[#EAECF0] rounded-[8px] text-[12px] font-bold text-[#344054] shadow-3xs cursor-pointer outline-none focus:border-[#FF4628] hover:bg-[#F9FAFB] transition-all"
                 >
                   <option value="ALL">Semua Node</option>
                   {nodes.map((n) => (
@@ -248,7 +248,7 @@ Buat ringkasan 3-5 kalimat dalam Bahasa Indonesia yang menjelaskan kondisi kesel
                 </select>
               </div>
 
-              <div className="h-[36px] flex items-center bg-[#F2F4F7] border border-[#EAECF0] rounded-[8px] px-3.5 mt-5 shadow-3xs">
+              <div className="h-[36px] w-full sm:w-auto flex items-center bg-[#F2F4F7] border border-[#EAECF0] rounded-[8px] px-3.5 sm:mt-5 shadow-3xs">
                 <span className="text-[11px] font-bold text-[#475467]">
                   {filteredData.length} sampel data
                 </span>

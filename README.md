@@ -1014,6 +1014,7 @@ Proyek ini mengikuti [Conventional Commits](https://www.conventionalcommits.org/
 
 ## 📷 Dokumentasi Project
 
+
 | Halaman Dashboard | Halaman History & Laporan |
 | :---: | :---: |
 | <img src="https://github.com/user-attachments/assets/47373fa1-063a-4b6b-b80c-7e04c28cb9e9" alt="Halaman Dashboard" width="500"/> | <img src="https://github.com/user-attachments/assets/35f07f56-61e4-4c69-bc56-f3ab562d8624" alt="Halaman History" width="500"/> |

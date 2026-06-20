@@ -21,7 +21,7 @@ const RecentLogsTable = memo(({ data, setActivePage }) => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-[#F5F5F5] border-b border-[#B9C8D7]/30">

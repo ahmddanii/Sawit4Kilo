@@ -31,7 +31,7 @@ const AnomalyModule = ({ anomalies, insight, loading, onRefreshInsight }) => {
       </div>
 
       {anomalies?.length > 0 ? (
-        <div className="max-h-[300px] overflow-y-auto mb-5 border border-[#F2F4F7] rounded-[8px] scrollbar-thin">
+        <div className="max-h-[300px] overflow-y-auto overflow-x-auto mb-5 border border-[#F2F4F7] rounded-[8px] scrollbar-thin">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-[#F9FAFB] border-b border-[#EAECF0] sticky top-0 z-10">
