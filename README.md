@@ -1016,10 +1016,9 @@ Proyek ini mengikuti [Conventional Commits](https://www.conventionalcommits.org/
 
 | Halaman Dashboard | Halaman History & Laporan |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/d2bbd5da-f5d7-498c-8aa4-00e58bfb784f" alt="Halaman Dashboard" width="500"/> | <img src="https://github.com/user-attachments/assets/813bcc66-7254-41c8-94f3-5a63181bdaa8" alt="Halaman History" width="500"/> |
+| <img src="https://github.com/user-attachments/assets/47373fa1-063a-4b6b-b80c-7e04c28cb9e9" alt="Halaman Dashboard" width="500"/> | <img src="https://github.com/user-attachments/assets/35f07f56-61e4-4c69-bc56-f3ab562d8624" alt="Halaman History" width="500"/> |
 | **Halaman Device** | **Halaman Analis** |
-| <img src="https://github.com/user-attachments/assets/d59e1c12-454f-426d-96b3-6a9e71a58c68" alt="Halaman Device" width="500"/> | <img src="https://github.com/user-attachments/assets/d196e9fa-52bb-4e9a-844b-fe9aada87719" alt="Halaman Analis" width="500"/> |
-
+| <img src="https://github.com/user-attachments/assets/d59e1c12-454f-426d-96b3-6a9e71a58c68" alt="Halaman Device" width="500"/> | <img src="https://github.com/user-attachments/assets/911f8d1d-c57f-4c36-bd4f-33c7fbe84e0c" alt="Halaman Analis" width="500"/> |
 ---
 
 ## 📄 Lisensi
